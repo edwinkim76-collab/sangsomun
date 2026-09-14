@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>諸葛亮 上疏文</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet">
+<style>
+@font-face{
+  font-family:'DungGeunMo';
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/DungGeunMo.woff') format('woff');
+  font-weight:normal; font-style:normal; font-display:swap;
+}
+
+:root{
+  --xp-face:#ECE9D8;
+  --xp-shadow:#ACA899;
+  --xp-dark:#716F64;
+  --title-1:#0A50C8;
+  --title-2:#3C8CF0;
+  --title-3:#0640A8;
+  --plate-1:#2A55C8;
+  --plate-2:#4C86E4;
+  --gauge-red:#C2352A;
+  --gauge-blue:#2F5FC8;
+  --box:#E6E3C4;
+  --box-2:#D3CFA6;
+  --box-line:#8E8A63;
+  --txt:#1A1A12;
+  --name:#123A96;
+  --wood:#8E5A32;
+  --wood-d:#6B4224;
+  --floor:#CFA070;
+  --floor-2:#B8854F;
+  --rug:#8E2622;
+  --rug-2:#A93A30;
+  --pillar:#B03028;
+  --pillar-d:#7C1E18;
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:#5A7B9C;
+  background-image:
+    linear-gradient(180deg,#6E8FB0 0%,#41607F 100%);
+  font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;
+  display:flex; align-items:center; justify-content:center;
+  padding:clamp(6px,2vw,28px);
+}
+
+/* 창틀·명패 등 UI 요소에만 픽셀 폰트 */
+.titlebar h1,.menubar,.status,.plate,.box .who,.portrait .plate-name,
+.sheet .titlebar h1,.dropdown button,.jumplist button{
+  font-family:'DungGeunMo','Noto Sans KR',sans-serif;
+  -webkit-font-smoothing:none;
+}
+
+/* ══ 창 ══ */
+.win{
+  width:100%; max-width:880px;
+  background:var(--xp-face);
+  border:1px solid #0A3A8C;
+  border-radius:7px 7px 2px 2px;
+  box-shadow:0 10px 34px rgba(0,0,0,.5);
+  overflow:hidden;
+  display:flex; flex-direction:column;
+}
+
+.titlebar{
+  height:30px; flex:none;
+  background:linear-gradient(180deg,var(--title-2) 0%,var(--title-1) 12%,var(--title-1) 62%,var(--title-3) 100%);
+  display:flex; align-items:center; gap:6px;
+  padding:0 4px 0 6px;
+  color:#fff;
+}
+.titlebar .tico{
+  width:17px;height:17px;flex:none;
+  background:#F0D048; border:1px solid #8A6A10; border-radius:2px;
+  display:grid;place-items:center;
+  font-size:11px; color:#5A4008; font-weight:700; line-height:1;
+  font-family:'Nanum Myeongjo',serif;
+}
+.titlebar h1{
+  margin:0; font-size:14px; font-weight:400; letter-spacing:.06em;
+  text-shadow:1px 1px 0 rgba(0,0,0,.45);
+  flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.btns{display:flex; gap:2px;}
+.btns b{
+  width:21px;height:20px;
+  display:grid;place-items:center;
+  font-size:11px;font-family:Arial,sans-serif;font-weight:700;color:#fff;
+  background:linear-gradient(180deg,#5CA0F2,#1E5FD0);
+  border:1px solid #0A3A8C; border-radius:3px;
+  text-shadow:0 1px 0 rgba(0,0,0,.4);
+  cursor:default;
+}
+.btns b.x{background:linear-gradient(180deg,#F08464,#C63018);border-color:#8C2010;}
+
+/* 메뉴 */
+.menubar{
+  flex:none; display:flex; gap:2px;
+  padding:2px 4px;
+  background:var(--xp-face);
+  border-bottom:1px solid var(--xp-shadow);
+  font-size:13px;
+}
+.menubar button{
+  font:inherit; background:none; border:1px solid transparent;
+  padding:2px 9px; cursor:pointer; color:#111;
+}
+.menubar button:hover,.menubar button[aria-expanded="true"]{
+  background:#316AC5; color:#fff;
+}
+.menuwrap{position:relative;}
+.dropdown{
+  position:absolute; top:100%; left:0; z-index:40;
+  min-width:172px; padding:2px;
+  background:var(--xp-face);
+  border:1px solid var(--xp-dark);
+  box-shadow:2px 2px 5px rgba(0,0,0,.35);
+  display:none;
+}
+.dropdown.open{display:block;}
+.dropdown button{
+  display:block; width:100%; text-align:left;
+  padding:4px 14px; font:inherit; font-size:12.5px;
+  background:none;border:0;cursor:pointer;
+}
+.dropdown button:hover{background:#316AC5;color:#fff;}
+.dropdown hr{border:0;border-top:1px solid var(--xp-shadow);margin:3px 2px;}
+
+/* 툴바 */
+.toolbar{
+  flex:none; display:flex; align-items:center; gap:10px;
+  padding:5px 7px;
+  background:var(--xp-face);
+  border-bottom:1px solid var(--xp-shadow);
+}
+.tools{display:flex; gap:3px;}
+.tools button{
+  width:30px;height:28px;padding:0;
+  background:linear-gradient(180deg,#FBFAF4,#DCD8C0);
+  border:1px solid var(--xp-shadow);
+  cursor:pointer; display:grid;place-items:center;
+}
+.tools button:hover{background:#FFF3C8;border-color:#8A7A40;}
+.tools button:active{transform:translate(1px,1px);}
+.tools button[disabled]{opacity:.4;cursor:default;}
+
+.plates{flex:1; display:flex; align-items:center; gap:7px; min-width:0;}
+.plate{
+  flex:none;
+  padding:3px 13px;
+  font-size:13px; color:#fff; letter-spacing:.04em;
+  background:linear-gradient(180deg,var(--plate-2),var(--plate-1));
+  border:1px solid #16307A;
+  text-shadow:1px 1px 0 rgba(0,0,0,.4);
+  white-space:nowrap;
+}
+.gauge{
+  flex:1; min-width:40px; height:13px; position:relative;
+  background:var(--gauge-blue);
+  border:1px solid #16307A;
+  overflow:hidden;
+}
+.gauge i{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(180deg,#E05548,var(--gauge-red));
+  transition:width .25s steps(8);
+}
+.flag{flex:none;font-size:12px;color:#C2352A;}
+
+/* ══ 장면 ══ */
+.stage{
+  position:relative;
+  flex:1; min-height:0;
+  background:#2A1A12;
+  border-bottom:1px solid #1A1008;
+}
+.stage svg{display:block;width:100%;height:auto;}
+
+.bubble{
+  position:absolute;
+  left:47%; top:34%;
+  background:#fff; color:#111;
+  border:1px solid #333; border-radius:3px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:9.5px; font-weight:700; line-height:1.3; padding:3px 5px;
+  max-width:96px;
+  box-shadow:1px 1px 0 rgba(0,0,0,.35);
+  animation:bob 2.4s ease-in-out infinite;
+}
+.bubble::after{
+  content:""; position:absolute; left:12px; bottom:-6px;
+  border:6px solid transparent; border-top-color:#fff;
+  filter:drop-shadow(0 1px 0 #333);
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* ══ 대화창 ══ */
+.talk{
+  flex:none;
+  background:var(--xp-face);
+  padding:7px;
+  display:flex; gap:8px; align-items:stretch;
+  cursor:pointer;
+  user-select:none;
+}
+.portrait{
+  flex:none; width:96px;
+  border:2px solid var(--box-line);
+  background:#3E5A3A;
+  position:relative;
+}
+.portrait svg{display:block;width:100%;height:auto;}
+.portrait .plate-name{
+  position:absolute; left:-2px; bottom:-2px; right:-2px;
+  background:rgba(18,24,14,.8); color:#F2EFD4;
+  font-size:11px; text-align:center; padding:1px 0;
+  letter-spacing:.08em;
+}
+
+.box{
+  flex:1; min-width:0; position:relative;
+  background:var(--box);
+  border:2px solid var(--box-line);
+  box-shadow:inset 0 0 0 2px var(--box-2);
+  padding:12px 30px 16px 14px;
+  min-height:152px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.box .who{
+  position:absolute; top:-2px; left:-2px;
+  background:linear-gradient(180deg,var(--plate-2),var(--plate-1));
+  color:#fff; font-size:12px; padding:2px 12px;
+  border:1px solid #16307A;
+  text-shadow:1px 1px 0 rgba(0,0,0,.4);
+}
+.box .who + .say{margin-top:12px;}
+.say{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:16.5px; font-weight:500; line-height:1.95; color:#15150E;
+  letter-spacing:-.01em; word-break:keep-all;
+  min-height:1.95em;
+}
+.say em{font-style:normal; color:#8C2118; font-weight:700;}
+.say .kw{color:#123A96; font-weight:700;}
+
+.chapter{text-align:center;}
+.chapter .jo{
+  font-family:'Nanum Myeongjo',serif;
+  font-size:34px; color:#8C2118; line-height:1; margin-bottom:8px;
+}
+.chapter .nm{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:18px; font-weight:700; color:#15150E; line-height:1.6;
+  padding-bottom:8px; border-bottom:1px solid var(--box-line);
+  display:inline-block;
+}
+.chapter .part{
+  display:block; margin-top:9px; font-size:12.5px; font-weight:500; color:#5E5A3A;
+}
+
+.next{
+  position:absolute; right:10px; bottom:7px;
+  font-size:13px; color:#8C2118;
+  animation:blink 1s steps(2,end) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+
+/* 하단 상태 */
+.status{
+  flex:none; display:flex; align-items:center; gap:0;
+  font-size:11.5px; color:#40402C;
+  background:var(--xp-face);
+  border-top:1px solid #FFF;
+  padding:2px 4px 3px;
+}
+.status span{
+  border:1px solid var(--xp-shadow);
+  border-top-color:var(--xp-dark); border-left-color:var(--xp-dark);
+  padding:2px 8px; margin-right:3px;
+  background:var(--xp-face);
+}
+.status .grow{flex:1;}
+
+/* ══ 오버레이(전문/목록/정보) ══ */
+.modal{
+  position:fixed; inset:0; z-index:90;
+  background:rgba(10,20,40,.55);
+  display:none; align-items:center; justify-content:center;
+  padding:14px;
+}
+.modal.open{display:flex;}
+.sheet{
+  width:100%; max-width:720px; max-height:88vh;
+  background:var(--xp-face);
+  border:1px solid #0A3A8C; border-radius:7px 7px 2px 2px;
+  display:flex; flex-direction:column; overflow:hidden;
+  box-shadow:0 14px 40px rgba(0,0,0,.55);
+}
+.sheet .titlebar h1{font-size:13px;}
+.sheet .content{
+  overflow:auto; padding:16px 20px 26px;
+  background:var(--box);
+  box-shadow:inset 0 0 0 2px var(--box-2);
+  margin:7px; border:2px solid var(--box-line);
+}
+.sheet h3{
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:16.5px; font-weight:700; margin:26px 0 10px;
+  color:#15150E; border-left:5px solid #8C2118; padding-left:10px; line-height:1.55;
+}
+.sheet h3 b{color:#8C2118; font-family:'Nanum Myeongjo',serif; margin-right:7px;}
+.sheet p{font-family:'Noto Sans KR',sans-serif; font-size:15.5px; font-weight:500;
+  line-height:2.05; margin:0 0 1em; color:#22220F; word-break:keep-all; letter-spacing:-.01em;}
+.sheet .divider{
+  margin:26px 0 6px; padding:5px 0;
+  text-align:center; font-size:15px; font-weight:700; color:#fff;
+  background:linear-gradient(180deg,var(--plate-2),var(--plate-1));
+  border:1px solid #16307A;
+}
+.jumplist{padding:7px;}
+.jumplist button{
+  display:block; width:100%; text-align:left;
+  font-size:13.5px; padding:6px 10px;
+  background:var(--xp-face); border:1px solid transparent; cursor:pointer;
+}
+.jumplist button:hover{background:#316AC5;color:#fff;}
+.jumplist button b{color:#8C2118; font-family:'Nanum Myeongjo',serif; margin-right:8px;}
+.jumplist button:hover b{color:#FFD98A;}
+
+.about{padding:20px; font-size:14px; font-weight:500; line-height:2; color:#22220F;}
+.about .verse{
+  margin:12px 0 0; padding:10px 12px;
+  background:var(--box); border:2px solid var(--box-line);
+  font-family:'Nanum Myeongjo',serif; font-size:14px; line-height:1.8;
+}
+.about .verse small{display:block;margin-top:6px;color:#6E6A48;font-family:'Nanum Gothic',sans-serif;}
+
+@media (max-width:620px){
+  .toolbar{flex-wrap:wrap;}
+  .plates{order:3; width:100%;}
+  .talk{flex-direction:column;}
+  .portrait{width:74px;}
+  .box{padding:12px 26px 16px 12px;}
+  .say{font-size:15.5px;}
+  .tools button{width:27px;height:26px;}
+  .status .hide-s{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  .bubble,.next{animation:none;}
+}
+:focus-visible{outline:2px solid #FFD24A; outline-offset:1px;}
+</style>
+</head>
+<body>
+
+<div class="win" id="win">
+
+  <div class="titlebar">
+    <div class="tico">諸</div>
+    <h1>諸葛亮 上疏文 — 丙午年</h1>
+    <div class="btns"><b>–</b><b>□</b><b class="x">×</b></div>
+  </div>
+
+  <nav class="menubar">
+    <div class="menuwrap">
+      <button id="m1" aria-expanded="false">파일</button>
+      <div class="dropdown" id="d1">
+        <button data-act="full">상소문 전문 보기</button>
+        <button data-act="print">인쇄</button>
+        <hr>
+        <button data-act="close">닫기</button>
+      </div>
+    </div>
+    <div class="menuwrap">
+      <button id="m2" aria-expanded="false">기능</button>
+      <div class="dropdown" id="d2">
+        <button data-act="jump">조목 목록</button>
+        <button data-act="restart">처음부터 다시</button>
+        <hr>
+        <button data-act="auto">자동 넘김 켜기 / 끄기</button>
+      </div>
+    </div>
+    <div class="menuwrap">
+      <button id="m3" aria-expanded="false">정보</button>
+      <div class="dropdown" id="d3">
+        <button data-act="about">오늘의 글귀와 안내</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="toolbar">
+    <div class="tools">
+      <button title="처음으로" data-act="restart">
+        <svg width="18" height="16" viewBox="0 0 18 16"><rect x="1" y="6" width="16" height="9" fill="#B03028" stroke="#6B1810"/><polygon points="9,1 17,6 1,6" fill="#E0B050" stroke="#8A6A10"/><rect x="7" y="9" width="4" height="6" fill="#6B4224"/></svg>
+      </button>
+      <button title="이전" data-act="prev">
+        <svg width="18" height="16" viewBox="0 0 18 16"><polygon points="12,2 12,14 4,8" fill="#2F5FC8" stroke="#16307A"/></svg>
+      </button>
+      <button title="다음" data-act="next">
+        <svg width="18" height="16" viewBox="0 0 18 16"><polygon points="6,2 6,14 14,8" fill="#2F5FC8" stroke="#16307A"/></svg>
+      </button>
+      <button title="조목 목록" data-act="jump">
+        <svg width="18" height="16" viewBox="0 0 18 16"><rect x="2" y="2" width="14" height="12" fill="#F2EFD4" stroke="#8E8A63"/><rect x="4" y="5" width="10" height="1.6" fill="#8C2118"/><rect x="4" y="8" width="10" height="1.6" fill="#5A5640"/><rect x="4" y="11" width="7" height="1.6" fill="#5A5640"/></svg>
+      </button>
+      <button title="전문 보기" data-act="full">
+        <svg width="18" height="16" viewBox="0 0 18 16"><path d="M2 3h6v11H2z" fill="#E6E3C4" stroke="#8E8A63"/><path d="M10 3h6v11h-6z" fill="#E6E3C4" stroke="#8E8A63"/><rect x="8" y="2" width="2" height="12" fill="#8E5A32"/></svg>
+      </button>
+      <button title="자동 넘김" data-act="auto" id="autoBtn">
+        <svg width="18" height="16" viewBox="0 0 18 16"><circle cx="9" cy="8" r="6" fill="none" stroke="#2F5FC8" stroke-width="2"/><path d="M9 4v4l3 2" stroke="#8C2118" stroke-width="2" fill="none"/></svg>
+      </button>
+      <button title="인쇄" data-act="print">
+        <svg width="18" height="16" viewBox="0 0 18 16"><rect x="4" y="2" width="10" height="4" fill="#F2EFD4" stroke="#8E8A63"/><rect x="2" y="6" width="14" height="6" fill="#9E9A80" stroke="#5A5640"/><rect x="5" y="9" width="8" height="5" fill="#fff" stroke="#8E8A63"/></svg>
+      </button>
+      <button title="안내" data-act="about">
+        <svg width="18" height="16" viewBox="0 0 18 16"><circle cx="9" cy="8" r="6.5" fill="#2F5FC8" stroke="#16307A"/><rect x="8" y="6.5" width="2" height="5" fill="#fff"/><rect x="8" y="4" width="2" height="2" fill="#fff"/></svg>
+      </button>
+    </div>
+
+    <div class="plates">
+      <div class="plate" id="plateL">제갈량 등장</div>
+      <span class="flag">▼</span>
+      <div class="gauge"><i id="gauge"></i></div>
+      <span class="flag">▼</span>
+      <div class="plate" id="plateR">승상부 회의장</div>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <svg viewBox="0 0 640 330" xmlns="http://www.w3.org/2000/svg" aria-label="승상부 회의장">
+      <defs>
+        <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#7A4A28"/><stop offset="1" stop-color="#A0663A"/>
+        </linearGradient>
+        <linearGradient id="flr" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#B8854F"/><stop offset="1" stop-color="#D8AA78"/>
+        </linearGradient>
+        <linearGradient id="pil" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#7C1E18"/><stop offset=".35" stop-color="#C0443A"/>
+          <stop offset=".7" stop-color="#A82A22"/><stop offset="1" stop-color="#6E1A14"/>
+        </linearGradient>
+      </defs>
+
+      <!-- 벽 -->
+      <rect width="640" height="132" fill="url(#wall)"/>
+      <g opacity=".35">
+        <rect x="0" y="0" width="640" height="4" fill="#4E2C14"/>
+        <rect x="0" y="60" width="640" height="3" fill="#4E2C14"/>
+        <rect x="0" y="126" width="640" height="6" fill="#4E2C14"/>
+      </g>
+      <!-- 벽 격자 장식 -->
+      <g stroke="#5E3418" stroke-width="2" opacity=".55" fill="none">
+        <path d="M60 10h80v46H60zM180 10h80v46h-80zM300 10h80v46h-80zM420 10h80v46h-80zM540 10h80v46h-80z"/>
+        <path d="M100 10v46M60 33h80M220 10v46M180 33h80M340 10v46M300 33h80M460 10v46M420 33h80M580 10v46M540 33h80"/>
+      </g>
+
+      <!-- 바닥 -->
+      <rect y="132" width="640" height="198" fill="url(#flr)"/>
+      <g stroke="#A97445" stroke-width="1.4" opacity=".5">
+        <path d="M-40 160 L680 160M-60 196 L700 196M-90 240 L740 240M-130 292 L790 292"/>
+        <path d="M120 132 L60 330M250 132 L228 330M390 132 L404 330M520 132 L572 330"/>
+      </g>
+
+      <!-- 왼쪽 단상 카펫 -->
+      <polygon points="36,178 240,178 268,254 8,254" fill="#8E2622" stroke="#5E1612" stroke-width="2"/>
+      <polygon points="52,186 226,186 248,246 30,246" fill="none" stroke="#D4A24A" stroke-width="2" opacity=".7"/>
+      <!-- 아래 카펫 -->
+      <polygon points="150,268 470,268 500,326 118,326" fill="#8E2622" stroke="#5E1612" stroke-width="2"/>
+      <polygon points="166,276 456,276 480,318 140,318" fill="none" stroke="#D4A24A" stroke-width="2" opacity=".7"/>
+
+      <!-- 병풍 -->
+      <g>
+        <rect x="14" y="52" width="74" height="120" fill="#7C1E18" stroke="#4E1008" stroke-width="2"/>
+        <rect x="22" y="62" width="58" height="100" fill="#A02A20" stroke="#D4A24A"/>
+        <g stroke="#E0B050" stroke-width="2" fill="none" opacity=".8">
+          <path d="M32 76h38M32 92h38M32 108h38M32 124h38M32 140h38"/>
+          <path d="M42 66v106M60 66v106"/>
+        </g>
+      </g>
+
+      <!-- 기둥 -->
+      <rect x="300" y="24" width="30" height="200" fill="url(#pil)"/>
+      <rect x="294" y="18" width="42" height="12" fill="#D4A24A" stroke="#8A6A10"/>
+      <rect x="296" y="218" width="38" height="10" fill="#5E1612"/>
+      <rect x="516" y="10" width="38" height="228" fill="url(#pil)"/>
+      <rect x="508" y="2" width="54" height="14" fill="#D4A24A" stroke="#8A6A10"/>
+      <rect x="512" y="232" width="46" height="12" fill="#5E1612"/>
+
+      <!-- 탁자 -->
+      <g>
+        <polygon points="108,208 178,208 190,224 96,224" fill="#C8934F" stroke="#7A4E22" stroke-width="2"/>
+        <rect x="104" y="224" width="8" height="16" fill="#7A4E22"/>
+        <rect x="174" y="224" width="8" height="16" fill="#7A4E22"/>
+        <rect x="126" y="196" width="28" height="14" fill="#F2EFD4" stroke="#8E8A63"/>
+        <rect x="130" y="188" width="6" height="10" fill="#8C2118"/>
+      </g>
+
+      <!-- 긴 의자(장의자) -->
+      <g fill="#B8823E" stroke="#7A4E22" stroke-width="2">
+        <polygon points="236,252 380,252 392,266 246,266"/>
+        <rect x="250" y="266" width="9" height="18"/><rect x="372" y="266" width="9" height="18"/>
+        <polygon points="404,286 556,286 570,302 416,302"/>
+        <rect x="420" y="302" width="10" height="20"/><rect x="548" y="302" width="10" height="20"/>
+      </g>
+
+      <!-- 항아리 -->
+      <g>
+        <ellipse cx="428" cy="212" rx="20" ry="11" fill="#8E5A32" stroke="#5A3418" stroke-width="2"/>
+        <ellipse cx="428" cy="206" rx="15" ry="7" fill="#C08A50"/>
+        <ellipse cx="478" cy="196" rx="17" ry="9" fill="#8E5A32" stroke="#5A3418" stroke-width="2"/>
+        <ellipse cx="478" cy="191" rx="12" ry="6" fill="#C08A50"/>
+        <ellipse cx="586" cy="230" rx="22" ry="12" fill="#7C4A2A" stroke="#4E2C14" stroke-width="2"/>
+      </g>
+
+      <!-- 제갈량 (단상 위) -->
+      <g id="liang">
+        <ellipse cx="126" cy="206" rx="18" ry="6" fill="#000" opacity=".22"/>
+        <polygon points="108,206 144,206 138,150 114,150" fill="#E8E4D2" stroke="#8E8A63" stroke-width="1.6"/>
+        <polygon points="108,206 144,206 141,188 111,188" fill="#C9C4AB" opacity=".7"/>
+        <rect x="118" y="138" width="16" height="16" rx="2" fill="#EBC49A" stroke="#9A6A42" stroke-width="1.4"/>
+        <rect x="113" y="126" width="26" height="13" fill="#2C3A6E" stroke="#141E44" stroke-width="1.4"/>
+        <rect x="110" y="137" width="32" height="4" fill="#141E44"/>
+        <rect x="120" y="152" width="12" height="10" fill="#F2EFE4" opacity=".9"/>
+        <!-- 백우선 -->
+        <g transform="rotate(-16 148 168)">
+          <ellipse cx="150" cy="164" rx="9" ry="14" fill="#F4F2E6" stroke="#8E8A63" stroke-width="1.4"/>
+          <rect x="148.5" y="176" width="3" height="14" fill="#8E5A32"/>
+        </g>
+      </g>
+
+      <!-- 주공 woni (중앙) -->
+      <g id="woni">
+        <ellipse cx="316" cy="300" rx="19" ry="6" fill="#000" opacity=".22"/>
+        <polygon points="298,300 334,300 329,242 303,242" fill="#2E6B58" stroke="#17402F" stroke-width="1.6"/>
+        <polygon points="298,300 334,300 331,282 301,282" fill="#1E4E3E" opacity=".8"/>
+        <rect x="308" y="228" width="16" height="16" rx="2" fill="#EBC49A" stroke="#9A6A42" stroke-width="1.4"/>
+        <rect x="304" y="216" width="24" height="12" fill="#8C2118" stroke="#5A1008" stroke-width="1.4"/>
+        <rect x="301" y="226" width="30" height="4" fill="#5A1008"/>
+        <rect x="309" y="248" width="14" height="9" fill="#D4A24A"/>
+      </g>
+
+      <!-- 시종 -->
+      <g id="guard">
+        <ellipse cx="470" cy="258" rx="17" ry="6" fill="#000" opacity=".2"/>
+        <polygon points="454,258 486,258 481,206 459,206" fill="#2B4A82" stroke="#152C54" stroke-width="1.6"/>
+        <rect x="462" y="192" width="15" height="15" rx="2" fill="#EBC49A" stroke="#9A6A42" stroke-width="1.4"/>
+        <rect x="458" y="182" width="23" height="11" fill="#3A3A44" stroke="#1C1C24" stroke-width="1.4"/>
+        <rect x="463" y="212" width="13" height="8" fill="#C8C2A8"/>
+      </g>
+
+      <!-- 등불 -->
+      <g>
+        <rect x="228" y="0" width="4" height="22" fill="#4E2C14"/>
+        <ellipse cx="230" cy="32" rx="13" ry="16" fill="#D8503C" stroke="#7C1E18" stroke-width="2"/>
+        <rect x="222" y="46" width="16" height="7" fill="#D4A24A"/>
+        <rect x="608" y="0" width="4" height="16" fill="#4E2C14"/>
+        <ellipse cx="610" cy="26" rx="12" ry="15" fill="#D8503C" stroke="#7C1E18" stroke-width="2"/>
+      </g>
+    </svg>
+    <div class="bubble" id="bubble">밤이 깊었으나<br>등불을 끄지<br>않았습니다</div>
+  </div>
+
+  <div class="talk" id="talk">
+    <div class="portrait">
+      <svg viewBox="0 0 96 110" xmlns="http://www.w3.org/2000/svg" aria-label="제갈량 초상">
+        <defs>
+          <linearGradient id="pbg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5E7C4E"/><stop offset="1" stop-color="#30462A"/>
+          </linearGradient>
+        </defs>
+        <rect width="96" height="110" fill="url(#pbg)"/>
+        <ellipse cx="48" cy="104" rx="44" ry="26" fill="#E8E4D2"/>
+        <path d="M22 104c0-20 11-30 26-30s26 10 26 30z" fill="#EFEBDB" stroke="#9A9478" stroke-width="1.4"/>
+        <path d="M30 52c0-16 8-26 18-26s18 10 18 26c0 16-8 26-18 26s-18-10-18-26z" fill="#F0C89C"/>
+        <path d="M30 46c0-18 8-28 18-28s18 10 18 28" fill="#F5D3AA"/>
+        <rect x="24" y="14" width="48" height="16" fill="#2C3A6E" stroke="#141E44" stroke-width="2"/>
+        <rect x="20" y="28" width="56" height="6" fill="#141E44"/>
+        <rect x="44" y="6" width="8" height="10" fill="#2C3A6E" stroke="#141E44" stroke-width="1.6"/>
+        <ellipse cx="39" cy="50" rx="4.4" ry="3" fill="#fff"/>
+        <ellipse cx="57" cy="50" rx="4.4" ry="3" fill="#fff"/>
+        <circle cx="39.5" cy="50" r="2.1" fill="#241A12"/>
+        <circle cx="57.5" cy="50" r="2.1" fill="#241A12"/>
+        <path d="M32 43c4-3 9-3 12-1M52 42c3-2 8-2 12 1" stroke="#3A2A18" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M48 52v8" stroke="#C89A70" stroke-width="2"/>
+        <path d="M42 68c4 2 8 2 12 0" stroke="#7A4A2A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M36 72c2 12 5 20 12 22 7-2 10-10 12-22-4 4-8 6-12 6s-8-2-12-6z" fill="#4A3A2A" opacity=".92"/>
+        <path d="M28 60c-3 6-3 12-1 16M68 60c3 6 3 12 1 16" stroke="#4A3A2A" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div class="plate-name" id="pName">제갈량</div>
+    </div>
+
+    <div class="box" id="box">
+      <div class="who" id="who">제갈량</div>
+      <div class="say" id="say"></div>
+      <div class="next" id="nextMark">▼</div>
+    </div>
+  </div>
+
+  <div class="status">
+    <span id="stPage">1 / 1</span>
+    <span id="stPart">序</span>
+    <span class="grow hide-s" id="stHint">화면을 누르거나 Space를 눌러 다음으로 · ← 이전</span>
+    <span id="stDate">丙午年</span>
+  </div>
+</div>
+
+<!-- 전문 -->
+<div class="modal" id="mFull">
+  <div class="sheet">
+    <div class="titlebar"><div class="tico">全</div><h1>상소문 전문</h1><div class="btns"><b class="x" data-close="mFull">×</b></div></div>
+    <div class="content" id="fullBody"></div>
+  </div>
+</div>
+
+<!-- 목록 -->
+<div class="modal" id="mJump">
+  <div class="sheet" style="max-width:440px">
+    <div class="titlebar"><div class="tico">目</div><h1>조목 목록</h1><div class="btns"><b class="x" data-close="mJump">×</b></div></div>
+    <div class="content jumplist" id="jumpBody" style="background:var(--xp-face);box-shadow:none;border-color:var(--xp-shadow)"></div>
+  </div>
+</div>
+
+<!-- 정보 -->
+<div class="modal" id="mAbout">
+  <div class="sheet" style="max-width:440px">
+    <div class="titlebar"><div class="tico">信</div><h1>오늘의 글귀와 안내</h1><div class="btns"><b class="x" data-close="mAbout">×</b></div></div>
+    <div class="about">
+      <div id="aboutDate"></div>
+      <div class="verse" id="aboutVerse"></div>
+      <p style="margin:14px 0 0;font-size:12.5px;line-height:1.9;color:#5A5640">
+        이 상소문은 매일 새벽 여섯 시에 올라오도록 지어졌습니다.<br>
+        날짜와 머리 글귀는 날마다 바뀝니다.<br>
+        화면을 누르면 다음 말, ← 키는 이전 말입니다.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONTENT = [{"part": "序", "jo": "", "title": "신 량이 아뢰옵니다", "loc": "승상부 · 축시(丑時)", "ps": ["신이 초려에서 밭을 갈던 시절에는, 하루 세 끼와 책 몇 권이면 족하다 여겼습니다. 그러나 주공을 만난 뒤로는 천하를 도모하게 되었으니, 사람의 일이란 본디 이러합니다. 뜻을 세우면 길이 열리고, 길이 열리면 짐이 무거워집니다.", "지난 한 해, 주공께서는 바이오와 반도체 두 전선을 홀로 감당하시며 여러 싸움을 치르셨습니다. 이제 두 해째로 접어드는 문턱에서, 신이 두 편의 글을 올립니다. 上篇은 새로 얻으신 병기(兵器)를 다루는 법이요, 下篇은 그 병기를 어디에 쓰실 것인가에 관한 것입니다. 병기를 먼저 논함은, 도구가 손에 익어야 비로소 큰 그림을 그릴 여유가 생기기 때문입니다."]}, {"part": "上篇", "jo": "一", "title": "먼저 진(陣)을 정하고, 그 안에서만 싸우십시오", "loc": "승상부 · 병기고", "ps": ["클로드 코드는 열어둔 폴더 하나를 전장으로 삼습니다. 그 바깥은 보지 못하고, 그 안은 전부 봅니다. 그러니 바탕화면 전체를 펼쳐놓고 부르지 마십시오. 맥미니에 ~/fsd 같은 진지를 하나 파고, 그 안에 회의록·영어기록·자료를 모으신 뒤, 터미널에서 cd ~/fsd 하고 claude 한 마디만 하십시오. 진(陣)이 좁을수록 지휘가 정확해집니다. 처음 한 달은 이 폴더 하나만으로 충분합니다.", "진지를 넓히고 싶은 마음은 익숙해진 뒤에 내십시오. 처음부터 회사 문서 전체를 보여주려 하시면, 병사는 헤매고 장수는 무엇을 시켰는지조차 잊게 됩니다."]}, {"part": "上篇", "jo": "二", "title": "군령장(CLAUDE.md)을 세워 같은 말을 두 번 하지 마십시오", "loc": "승상부 · 병기고", "ps": ["매번 \"한국어로 답하라, 나를 woni라 불러라, 회의록은 이런 형식이다\"를 되풀이하는 것은 장수가 매일 아침 군율을 외치는 것과 같아 지칩니다. 진지 안에 CLAUDE.md라는 문서 한 장을 두고 그곳에 적어두십시오. 부를 때마다 스스로 읽습니다. 처음에는 다섯 줄이면 족합니다. 쓰다가 답답한 대목이 생기거든 그때마다 한 줄씩 보태십시오. 군령은 처음부터 완전할 수 없고, 싸우면서 다듬는 것입니다.", "첫 다섯 줄은 이러하면 족합니다. 첫째 한국어로 답할 것, 둘째 나를 woni라 부를 것, 셋째 회의록은 거래선·날짜·카테고리·미팅유형 순으로 정리할 것, 넷째 파일을 지우기 전에 반드시 물을 것, 다섯째 모르면 지어내지 말고 모른다 할 것. 이 다섯이 주공의 군율의 뼈대입니다."]}, {"part": "上篇", "jo": "三", "title": "치기 전에 반드시 계책을 먼저 물으십시오", "loc": "승상부 · 병기고", "ps": ["초보 장수의 가장 흔한 실책은, 병사에게 바로 칼을 뽑게 하는 것입니다. 명을 내리시기 전에 이렇게 덧붙이십시오. \"바로 고치지 말고, 어떻게 할 것인지 먼저 말해다오.\" 계책을 들어보고 어긋난 데가 있거든 그때 바로잡으면, 헛되이 무너뜨린 성을 다시 쌓는 수고를 덜 수 있습니다. 키보드에서 Shift+Tab을 누르면 아예 계책만 올리고 손대지 않는 모드가 열리니, 낯선 일일수록 이 문을 쓰십시오.", "또한 명을 내리실 때는 짧게 하시되 뜻은 길게 이르십시오. \"정리해다오\"가 아니라 \"무엇을 어떤 형식으로, 어디에 두어라\"까지 말씀하시면, 병사는 묻지 않고 움직입니다."]}, {"part": "上篇", "jo": "四", "title": "물러설 길을 먼저 파두십시오", "loc": "승상부 · 병기고", "ps": ["퇴로가 있는 군대는 과감해지고, 없는 군대는 겁이 많아집니다. 진지에서 git init을 한 번 실행해두시고, 큰일을 시키기 전에 \"지금 상태를 커밋해다오\" 한 마디만 하십시오. 무엇이 잘못되어도 어제로 돌아갈 수 있습니다. 이 한 가지를 갖추시면, 파일이 망가질까 두려워 시키지 못하던 일들을 마음 놓고 맡기실 수 있게 됩니다. 두려움을 없애는 것이 실력을 늘리는 가장 빠른 길입니다.", "덧붙여, 원본이 귀한 파일은 사본을 두고 일하십시오. 퇴로를 둘 겹으로 두는 장수를 겁쟁이라 부르지 않습니다."]}, {"part": "上篇", "jo": "五", "title": "작은 성을 먼저 취하고 큰 성은 뒤로 미루십시오", "loc": "승상부 · 병기고", "ps": ["첫 주에 LTMC 대시보드 같은 견고한 성을 치려 하시면 반드시 지칩니다. 대신 이미 손에 쥔 것으로 시작하십시오. 노션에서 뽑아둔 회의록 .txt 오십 장의 파일명을 날짜_거래선_미팅유형 형식으로 한 번에 고치는 일 — 사람이 하면 한나절, 클로드 코드가 하면 삼 분입니다. 이 한 번의 승리가 주는 확신이, 열 편의 설명서보다 주공을 멀리 데려갑니다. 승리의 기억이 곧 병법입니다.", "그 다음으로는 영어 표현 기록을 주제별로 묶는 일, 그 다음으로는 노션에 올릴 형식으로 바꾸는 일 — 이렇게 한 계단씩 오르시면 석 달 뒤에 대시보드가 어렵지 않게 됩니다."]}, {"part": "上篇", "jo": "六", "title": "이미 지으신 병법서를 진중으로 옮기십시오", "loc": "승상부 · 병기고", "ps": ["주공께서는 이미 다섯 권의 병법서를 손수 지으셨습니다. 미팅 전사록 스킬, 학습노트 스킬, 뉴스 인사이트 스킬, 데일리 브리핑 스킬, 그리고 디자인 스킬. 이것들을 진지 안 .claude/skills/ 아래에 옮겨두시면, 클로드 코드가 부를 때마다 스스로 꺼내 읽습니다. 새 무기를 익히는 가장 빠른 길은, 이미 익숙한 전법을 그 무기로 다시 치러보는 것입니다. 낯선 것은 도구뿐이고 전법은 이미 주공의 것입니다.", "옮기는 법을 모르시겠거든, 폴더를 열고 \"이 스킬 파일들을 클로드 코드가 읽을 수 있는 자리에 놓아다오\"라고 이르시면 됩니다. 병사에게 제 집을 정리하게 하는 것이 가장 빠릅니다."]}, {"part": "上篇", "jo": "七", "title": "하루에 잡일 하나씩만 없애십시오", "loc": "승상부 · 병기고", "ps": ["큰 자동화를 한 번에 세우려 하지 마시고, 매일 아침 스스로에게 물으십시오. \"어제 가장 지겨웠던 손일이 무엇이었나.\" 팀 주간활동 취합, 세일즈포스 포캐스트 대조, 한국경제 기사에서 섹터별 동향 추리기 — 이 셋만 해도 한 달이면 서른 개의 잡일이 사라집니다. 자동화는 설계로 오지 않고 누적으로 옵니다. 사 년을 하루도 거르지 않은 주공의 헬스처럼, 이것도 같은 방식으로만 쌓입니다.", "없앤 잡일은 한 줄로 적어 남기십시오. 석 달 뒤 그 목록이 주공께서 팀에게 보여줄 가장 설득력 있는 증거가 됩니다."]}, {"part": "上篇", "jo": "八", "title": "모르는 것을 묻는 일에 장수의 체면은 없습니다", "loc": "승상부 · 병기고", "ps": ["붉은 글씨의 오류가 뜨거든 당황하지 마시고 그것을 통째로 복사해 그대로 붙여넣으십시오. 해석은 병사의 몫입니다. 명령의 뜻을 모르시겠거든 \"이 명령이 무엇을 하는 것이냐, 위험은 없느냐\" 물으십시오. 주공께서는 영어를 익히실 때 매일 모르는 문장 앞에 서기를 마다하지 않으셨습니다. 같은 용기를 여기서도 쓰시면 됩니다. 초보라 함은 실력이 아니라 시기를 이르는 말일 뿐입니다.", "신이 융중에서 나올 적에도 군사를 부려본 일이 없었습니다. 아는 것이 많아 나선 것이 아니라, 물을 줄 알아 나선 것입니다."]}, {"part": "下篇", "jo": "一", "title": "솥의 세 다리를 흔들리지 않게 하십시오", "loc": "승상부 · 지도방", "ps": ["천하를 셋으로 나누어 솥의 세 다리처럼 세우는 것이 신의 오랜 계책이었습니다. 주공의 천하 또한 셋입니다. 바이오 아홉 거래선, 반도체 두 거래선, 그리고 CCUS·수소·암모니아로 이어지는 산업의 땅입니다. 바이오는 곡창이니 군량을 대고, 반도체는 요충이니 이름을 얻으며, 산업은 아직 개간되지 않은 변방이니 십 년 뒤의 나라입니다.", "경계하실 것은 하나입니다. 급한 전선이 조용한 전선의 병력을 매일 조금씩 빼앗아 간다는 것. 삼성바이오로직스의 급보 하나가 KIST와의 전기투석 논의를 한 달 미루게 합니다. 변방을 지키는 일은 아무도 재촉하지 않기에, 오직 주공만이 지킬 수 있습니다. 달력에 그 자리를 먼저 못 박아두십시오.", "신이 권하는 바는 한 달에 하루, 오직 변방만을 위한 날을 두시는 것입니다. 그날은 급보가 와도 미루십시오. 십 년 뒤의 곡창은 오늘 아무도 재촉하지 않는 그 하루에서 자랍니다.", "세 다리의 높이가 같을 필요는 없습니다. 다만 어느 하나도 땅에서 떨어지지만 않으면 솥은 넘어지지 않습니다."]}, {"part": "下篇", "jo": "二", "title": "승기가 보인 곳에 병력을 몰아넣으십시오", "loc": "승상부 · 지도방", "ps": ["2030을 향한 세 이니셔티브 가운데, TMCS는 이미 SK하이닉스의 투자 승인이라는 첫 승전보를 올렸습니다. 高細胞密度와 HPC/CMP는 아직 접전 중입니다. 무릇 용병의 이치는, 세 곳을 고르게 지원함이 아니라 이긴 곳에 배를 불려 결정적 승리로 만드는 것입니다.", "TMCS의 첫 승리를 하나의 계약으로 끝내지 마시고, 반도체 폐수라는 하나의 전형(典型)으로 만드십시오. 사례 한 편을 정교하게 지어 글로벌에 올리시면, 그것이 다음 해의 예산과 인력을 불러옵니다. 본사는 보고서를 읽는 것이 아니라 증거를 읽습니다. 증거를 가진 나라에 병력이 모입니다.", "다만 나머지 둘을 버리라는 말은 아닙니다. 高細胞密度는 바이오 본진을 지키는 싸움이니 물러설 수 없고, HPC/CMP는 때를 기다리는 싸움입니다. 지원의 크기를 다르게 하시라는 뜻일 뿐, 시선을 거두시라는 뜻이 아닙니다."]}, {"part": "下篇", "jo": "三", "title": "밖의 적보다 안의 불화를 먼저 다스리십시오", "loc": "승상부 · 지도방", "ps": ["지난 봄, BPG와의 마찰을 두고 후루야상께서 염려를 표하셨다 들었습니다. 신이 평생 보아온 바, 나라가 무너지는 것은 대개 성이 뚫려서가 아니라 장수들이 서로를 믿지 않아서였습니다. 다툼의 자리에서 옳음을 증명하려 하지 마시고, 상대가 무엇을 두려워하는지를 먼저 물으십시오. 대개는 실적이 아니라 자기 자리의 정당성입니다.", "후루야상께는 문제를 들고 가시되 반드시 두 개의 안을 함께 들고 가십시오. 문제만 들고 가면 근심을 나누는 것이고, 안을 들고 가면 판단을 구하는 것입니다. 윗사람은 근심을 나누는 부하보다 판단을 구하는 부하를 신뢰합니다.", "솔벤텀 승계 건처럼 문서가 없는 자리에서는 더욱 그러합니다. 확실한 것과 불확실한 것을 나누어 적어 올리시면, 불확실함 자체가 주공의 허물이 되지 않습니다. 감추어진 위험만이 장수를 다치게 합니다.", "다툰 자리에는 반드시 먼저 다녀오십시오. 이긴 쪽이 먼저 찾아가는 것이 약함이 아니라, 다음 싸움을 함께할 사람을 남기는 일입니다."]}, {"part": "下篇", "jo": "四", "title": "대시보드는 감시의 도구가 아니라 신뢰의 도구입니다", "loc": "승상부 · 지도방", "ps": ["LTMC 네 단계를 눈에 보이게 하시려는 뜻은 옳습니다. 다만 팀이 그것을 \"내 활동이 감시당하는 판\"으로 여기는 순간, 숫자는 즉시 거짓이 됩니다. 세일즈포스에 아름다운 숫자만 남고 진짜 파이프라인은 각자의 수첩으로 숨습니다.", "그러니 첫 회의에서 이 한 마디를 반드시 하십시오. \"이 판은 누가 일을 적게 했는지 보려는 것이 아니라, 어디에 내가 사람과 예산을 더 붙여야 하는지 보려는 것이다.\" 그리고 실제로 그렇게 쓰십시오. 한 번만 약속대로 쓰시면 팀이 스스로 숫자를 채웁니다. 도구가 문화를 이기지 못하고, 문화는 장수의 첫 마디에서 결정됩니다.", "그리고 판을 채우는 일 자체를 팀의 짐으로 만들지 마십시오. 손으로 옮겨 적는 일이 늘어나면 반드시 무너집니다. 세일즈포스에 이미 있는 것을 끌어오게 하시고, 사람은 판단할 몫만 지게 하십시오."]}, {"part": "下篇", "jo": "五", "title": "말(言)은 주공의 마지막 남은 무기입니다", "loc": "승상부 · 지도방", "ps": ["주공의 실력은 이미 충분하나, APMEA의 회의석에서는 실력이 아니라 실력이 전달된 만큼만 인정받습니다. 이는 부당한 일이 아니라 다국적 군영의 오래된 이치입니다. 억울해하지 마시고 무기로 삼으십시오.", "다만 완벽한 문장을 목표로 삼지 마십시오. 신이 권하는 바는 주공의 전장에서 반복되는 스무 개의 문장을 골라 완전히 체화하는 것입니다. 반대할 때, 시간을 벌 때, 자원을 요구할 때, 나쁜 소식을 전할 때 — 그 순간에 망설임 없이 나오는 문장이 있으면 회의의 주도권이 옮겨옵니다. 테니스의 서브를 여섯 해 다듬으셨듯, 스무 개의 문장을 여섯 달만 다듬으십시오.", "그리고 회의에서 한 번이라도 먼저 입을 여십시오. 준비된 첫 한 마디가 그날 주공의 자리를 정합니다. 뒤에 나오는 완벽한 문장보다, 처음에 나오는 온전치 못한 문장이 힘이 셉니다."]}, {"part": "下篇", "jo": "六", "title": "새벽의 규율을 재주보다 귀히 여기십시오", "loc": "승상부 · 지도방", "ps": ["주공께서는 매일 새벽 경제신문을 읽고, 사 년째 몸을 단련하시며, 여섯 해째 코트에 서십니다. 신이 이 상소를 새벽 여섯 시에 올리는 까닭도 여기 있습니다. 재주 있는 자는 많으나 규율을 지키는 자는 드뭅니다. 승부는 대개 그 드문 자리에서 갈립니다.", "다만 규율을 성적표로 만들지는 마십시오. 하루 거르셨다 하여 자책하시면 규율이 형벌이 되고, 형벌이 된 습관은 반드시 무너집니다. 거르신 날은 그저 다음 날 다시 시작하시면 그만입니다. 연속이 아니라 회복이 진짜 실력입니다.", "또한 읽으신 것을 그저 쌓아두지 마십시오. 새벽에 읽은 기사 가운데 하루 하나만 골라, 그것이 여과와 분리의 시장에 무엇을 뜻하는지 두 줄로 적어두십시오. 일 년이면 삼백 줄, 그것이 곧 주공의 시장관(市場觀)입니다.", "지식은 읽은 양으로 쌓이지 않고, 자기 말로 옮긴 양으로 쌓입니다. 주공께서 남과 다른 점은 읽는 부지런함이 아니라 옮기는 부지런함이어야 합니다."]}, {"part": "下篇", "jo": "七", "title": "십 년의 지도를 그리시되, 올해의 한 칸을 먼저 채우십시오", "loc": "승상부 · 지도방", "ps": ["『FSD Korea 2026–2036』을 쓰시려는 뜻은 장수가 아니라 재상의 뜻입니다. 십 년 뒤 여과와 분리가 어디에 서 있을지를 묻는 사람은 한국 안에 몇 되지 않습니다. 그 물음 자체가 주공을 다른 자리에 데려다 놓을 것입니다.", "다만 완성을 기다리지 마십시오. 서른 장을 다 쓴 뒤에 보이려 하시면 영원히 보이지 못합니다. 한 장(章)이 끝날 때마다 후루야상과 글로벌의 한 사람에게 보내십시오. 반응이 다음 장의 방향을 정해줍니다. 초려의 계책도 유비를 만나기 전에는 그저 시골 서생의 공상이었습니다. 글은 읽히는 순간에 비로소 전략이 됩니다.", "커즈와일의 十四주 독서를 곁들이시는 뜻도 여기 있을 것입니다. 다만 책을 다 읽고 쓰려 하지 마시고, 읽으며 쓰십시오. 남의 생각을 다 삼킨 뒤에 쓰는 글에는 주공의 얼굴이 남지 않습니다."]}, {"part": "下篇", "jo": "八", "title": "끝으로, 오래 가실 것을 청합니다", "loc": "승상부 · 지도방", "ps": ["신은 스스로를 아끼지 못하여 오장원의 별이 되었습니다. 여섯 번 기산을 나섰으나 이루지 못한 것은 계책이 모자라서가 아니라, 신의 몸이 계책을 따라가지 못했기 때문입니다. 이것이 신이 주공께 드리는 마지막이자 가장 절실한 진언입니다.", "부임 이태째는 흔히 조급해지는 해입니다. 첫해는 배우는 해라 용서받고, 셋째 해는 결실의 해라 불리니, 가운데 해에 서면 마음이 앞서 달립니다. 그러나 담박하지 않으면 뜻이 밝아지지 않고, 고요하지 않으면 멀리 이르지 못합니다. 새벽의 신문과 저녁의 코트를 지키십시오. 그것이 한가로움이 아니라, 십 년을 갈 장수의 병참(兵站)입니다.", "또한 혼자 지지 마십시오. 신이 모든 장부를 손수 살피다 몸을 상하였습니다. 주공께서 하지 않으셔도 되는 일을 팀에게 넘기는 것은 게으름이 아니라, 팀을 자라게 하는 가장 확실한 방법입니다. 십 년 뒤 주공의 공(功)은 주공이 하신 일이 아니라, 주공이 키운 사람으로 헤아려질 것입니다.", "부디 오래 가십시오. 빨리 가는 장수는 한 전쟁을 이기고, 오래 가는 장수는 한 시대를 바꿉니다."]}, {"part": "跋", "jo": "", "title": "맺는 말", "loc": "승상부 · 인시(寅時)", "ps": ["신이 아뢴 여덟과 여덟이 모두 옳지는 않을 것입니다. 그중 하나라도 주공의 오늘에 쓰이면 신은 족합니다. 나머지는 버리십시오. 충언을 다 취하는 장수는 자기 판단을 잃습니다.", "내일 새벽에도 등불을 밝히고 기다리겠습니다. 부디 몸을 아끼시고, 멀리 가십시오."]}];
+
+/* ── 간지 · 글귀 ───────────────────────── */
+const GAN=["갑","을","병","정","무","기","경","신","임","계"];
+const JI=["자","축","인","묘","진","사","오","미","신","유","술","해"];
+const HAN=["","一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五","十六","十七","十八","十九","二十","二十一","二十二","二十三","二十四","二十五","二十六","二十七","二十八","二十九","三十","三十一"];
+const VERSES=[
+ ["담박하지 않으면 뜻을 밝힐 수 없고, 고요하지 않으면 멀리 이를 수 없습니다.","誡子書"],
+ ["큰일을 도모하는 자는 작은 일에서 신의를 잃지 않습니다.","便宜十六策"],
+ ["일을 꾀함은 사람에게 있고, 이룸은 때에 달려 있습니다.","三國志"],
+ ["장수는 이기고 나서 싸우고, 어리석은 자는 싸우고 나서 이기려 합니다.","孫子"],
+ ["멀리 보는 자는 오늘의 손해를 겁내지 않습니다.","便宜十六策"],
+ ["의심하면 쓰지 말고, 썼거든 의심하지 마십시오.","用人篇"],
+ ["급한 일과 중한 일을 가리는 것이 장수가 하루를 여는 첫 일입니다.","將苑"],
+ ["병사의 마음을 얻지 못하면 성이 높아도 지킬 수 없습니다.","將苑"],
+ ["모자람을 아는 것이 이미 절반의 지혜입니다.","誡子書"],
+ ["하루를 아끼는 자가 십 년을 얻습니다.","出師表"],
+ ["말이 앞서면 신의가 뒤따르기 어렵습니다.","便宜十六策"],
+ ["세를 얻은 곳에 힘을 모으고, 잃은 곳에서는 물러설 줄 알아야 합니다.","兵法"],
+ ["아랫사람의 말을 막는 장수는 스스로 눈을 가리는 것입니다.","出師表"],
+ ["작은 승리를 기록해두십시오. 그것이 다음 싸움의 군량입니다.","將苑"]
+];
+const d=new Date(), Y=d.getFullYear(), M=d.getMonth()+1, D=d.getDate();
+const ganji=GAN[(Y-4)%10]+JI[(Y-4)%12]+"년";
+const dateKo=ganji+" "+HAN[M]+"월 "+HAN[D]+"일";
+const doy=Math.floor((d-new Date(Y,0,0))/864e5);
+const verse=VERSES[doy%VERSES.length];
+
+document.querySelector(".titlebar h1").textContent="諸葛亮 上疏文 — "+ganji;
+document.getElementById("stDate").textContent=dateKo;
+document.getElementById("aboutDate").innerHTML="<b>"+dateKo+"</b> ("+Y+"."+M+"."+D+")<br>主公 woni 께 올리는 상소";
+document.getElementById("aboutVerse").innerHTML=verse[0]+"<small>— "+verse[1]+"</small>";
+
+/* ── 페이지 만들기 ─────────────────────── */
+function chunk(t,limit){
+  const parts=t.split(/(?<=[.?!”」])\s+/), out=[]; let buf="";
+  for(const s of parts){
+    if(!buf) buf=s;
+    else if((buf+" "+s).length<=limit) buf+=" "+s;
+    else {out.push(buf); buf=s;}
+  }
+  if(buf) out.push(buf);
+  return out;
+}
+const PAGES=[], MARKS=[];
+CONTENT.forEach((sc,i)=>{
+  MARKS.push({jo:sc.jo,title:sc.title,part:sc.part,idx:PAGES.length});
+  PAGES.push({kind:"title",sc,i});
+  sc.ps.forEach(p=>chunk(p,104).forEach(t=>PAGES.push({kind:"talk",sc,i,text:t})));
+});
+
+/* ── 렌더 ─────────────────────────────── */
+const say=document.getElementById("say"), box=document.getElementById("box"),
+      who=document.getElementById("who"), plateL=document.getElementById("plateL"),
+      plateR=document.getElementById("plateR"), gauge=document.getElementById("gauge"),
+      stPage=document.getElementById("stPage"), stPart=document.getElementById("stPart"),
+      nextMark=document.getElementById("nextMark"), bubble=document.getElementById("bubble");
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let cur=0, typer=null, typing=false, auto=false, autoT=null;
+
+const PARTNAME={"序":"머리말","上篇":"上篇 · 병기","下篇":"下篇 · 천하","跋":"맺는 말"};
+
+function render(n){
+  cur=Math.max(0,Math.min(PAGES.length-1,n));
+  const p=PAGES[cur];
+  plateL.textContent = p.sc.jo ? (p.sc.part+" 第"+p.sc.jo+"條") : PARTNAME[p.sc.part];
+  plateR.textContent = p.sc.loc;
+  stPart.textContent = PARTNAME[p.sc.part]||p.sc.part;
+  stPage.textContent = (cur+1)+" / "+PAGES.length;
+  gauge.style.width = ((cur+1)/PAGES.length*100).toFixed(1)+"%";
+  bubble.style.display = p.kind==="title" ? "none" : "block";
+
+  clearInterval(typer); typing=false;
+  if(p.kind==="title"){
+    who.style.display="none";
+    box.classList.add("chapterbox");
+    say.innerHTML='<div class="chapter">'+
+      (p.sc.jo?'<div class="jo">'+p.sc.jo+'</div>':'')+
+      '<div class="nm">'+p.sc.title+'<span class="part">'+(PARTNAME[p.sc.part]||p.sc.part)+'</span></div></div>';
+  }else{
+    who.style.display="block";
+    box.classList.remove("chapterbox");
+    typeOut(p.text);
+  }
+  scheduleAuto();
+}
+
+function typeOut(t){
+  if(reduce){ say.textContent=t; return; }
+  say.textContent=""; typing=true;
+  let i=0;
+  typer=setInterval(()=>{
+    say.textContent=t.slice(0,++i);
+    if(i>=t.length){clearInterval(typer); typing=false; scheduleAuto();}
+  },16);
+}
+function advance(){
+  if(typing){ clearInterval(typer); typing=false; say.textContent=PAGES[cur].text; scheduleAuto(); return; }
+  if(cur<PAGES.length-1) render(cur+1);
+}
+function scheduleAuto(){
+  clearTimeout(autoT);
+  if(auto && !typing) autoT=setTimeout(()=>{ if(cur<PAGES.length-1) advance(); },2100);
+}
+
+document.getElementById("talk").addEventListener("click",advance);
+document.getElementById("stage").addEventListener("click",advance);
+addEventListener("keydown",e=>{
+  if(document.querySelector(".modal.open")){ if(e.key==="Escape") closeAll(); return; }
+  if([" ","Enter","ArrowRight","ArrowDown"].includes(e.key)){e.preventDefault();advance();}
+  if(["ArrowLeft","ArrowUp"].includes(e.key)){e.preventDefault();render(cur-1);}
+});
+
+/* ── 메뉴 ─────────────────────────────── */
+const menus=[["m1","d1"],["m2","d2"],["m3","d3"]];
+menus.forEach(([b,dd])=>{
+  const bt=document.getElementById(b), dp=document.getElementById(dd);
+  bt.addEventListener("click",e=>{
+    e.stopPropagation();
+    const open=dp.classList.contains("open");
+    closeMenus();
+    if(!open){dp.classList.add("open");bt.setAttribute("aria-expanded","true");}
+  });
+});
+function closeMenus(){
+  menus.forEach(([b,dd])=>{
+    document.getElementById(dd).classList.remove("open");
+    document.getElementById(b).setAttribute("aria-expanded","false");
+  });
+}
+document.addEventListener("click",closeMenus);
+
+document.querySelectorAll("[data-act]").forEach(el=>{
+  el.addEventListener("click",e=>{
+    e.stopPropagation(); closeMenus();
+    act(el.dataset.act);
+  });
+});
+function act(a){
+  if(a==="next") advance();
+  else if(a==="prev") render(cur-1);
+  else if(a==="restart") render(0);
+  else if(a==="jump") open_("mJump");
+  else if(a==="full") open_("mFull");
+  else if(a==="about") open_("mAbout");
+  else if(a==="print") window.print();
+  else if(a==="close") alert("상소를 물리셔도, 내일 새벽 여섯 시에 다시 올리겠습니다.");
+  else if(a==="auto"){ auto=!auto; document.getElementById("stHint").textContent = auto? "자동 넘김 켜짐 · 아무 키나 눌러 멈춤" : "화면을 누르거나 Space를 눌러 다음으로 · ← 이전"; scheduleAuto(); }
+}
+function open_(id){document.getElementById(id).classList.add("open");}
+function closeAll(){document.querySelectorAll(".modal").forEach(m=>m.classList.remove("open"));}
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",closeAll));
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)closeAll();}));
+
+/* ── 전문 · 목록 ───────────────────────── */
+let html="", lastPart="";
+CONTENT.forEach(sc=>{
+  if(sc.part!==lastPart){
+    html+='<div class="divider">'+(PARTNAME[sc.part]||sc.part)+'</div>';
+    lastPart=sc.part;
+  }
+  html+='<h3>'+(sc.jo?'<b>'+sc.jo+'</b>':'')+sc.title+'</h3>';
+  sc.ps.forEach(p=>html+='<p>'+p+'</p>');
+});
+document.getElementById("fullBody").innerHTML=html;
+
+document.getElementById("jumpBody").innerHTML=MARKS.map((m,i)=>
+  '<button data-go="'+m.idx+'">'+(m.jo?'<b>'+m.jo+'</b>':'')+m.title+'</button>').join("");
+document.querySelectorAll("[data-go]").forEach(b=>{
+  b.addEventListener("click",()=>{closeAll();render(+b.dataset.go);});
+});
+
+render(0);
+</script>
+</body>
+</html>
